@@ -3,22 +3,22 @@
 //
 
 #include "sockets/Udp.h"
-#include <unistd.h>
+#include "Point.h"
+#include "sockets/Connection.h"
 
 using namespace std;
 
 int main(int argc, char *argv[]) {
-    std::cout << "Hello, from client" << std::endl;
+    Connection con(new Udp(0, atoi(argv[2])));
+    con.initialize();
+    Point *p;
 
-    cout << argv[2] << endl;
-    Udp udp(0, atoi(argv[2]));
-    udp.initialize();
+    cout << "Hello, from client" << endl;
 
-    char buffer[1024];
-    udp.sendData("hello");
-    udp.reciveData(buffer, sizeof(buffer));
-    cout << buffer << endl;
+    con.sendString("hello");
+    p = con.receive<Point>();
+    cout << *p << endl;
 
-
+    delete p;
     return 0;
 }
